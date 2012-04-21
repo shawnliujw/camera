@@ -1,0 +1,86 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<link rel="stylesheet" href="jquery.mobile/jquery.mobile-1.1.0.min.css" />
+	<link href="swipe/jquery-mobile.css" type="text/css" rel="stylesheet" />
+<script src="jquery.mobile/jquery-1.7.2.min.js"></script>
+<script type="text/javascript"
+	src="jquery.mobile/jquery.mobile-1.1.0.min.js"></script>
+<script type="text/javascript" src="phonegap/cordova-1.6.1.js"></script>
+<script type="text/javascript" src="phonegap/smsplugin.js"></script>
+<script type="text/javascript" src="js/camera.js"></script>
+<style type="text/css" media="screen">
+</style>
+<title>Mpupa Camera</title>
+<script type="text/javascript">
+	var pictureSource; // picture source
+	var destinationType; // sets the format of returned value 
+	document.addEventListener("deviceready", onDeviceReady, false);
+	
+	function openSendLink() {
+		$("#sendSmsDiv").slideToggle();
+	}
+</script>
+</head>
+
+<div data-role="page" id="galleryPage" class="gallery-page" style="background-image: url('images/bg.jpg');">
+<script type="text/javascript">
+
+</script>
+	<div data-role="header">
+		<div data-role="navbar">
+			<ul >
+				<li><a href="#" onclick="capturePhoto(); ">Capture Photo</a></li>
+				<li><a href="#"
+					onclick="getPhoto(pictureSource.SAVEDPHOTOALBUM);">Photo Album</a></li>
+			</ul>
+		</div>
+	</div>
+
+	<div data-role="content">	
+		<ul class="gallery" id="galleryDiv" >
+			
+		</ul>
+		
+		<div id="uploadSuccessDiv" style="display: none;">
+		
+			<div data-role="controlgroup" style="margin-top: 30px;">
+				<a href="index.html" data-role="button" style="display: none;">Yes</a>
+				<a href="http://192.168.0.102:8080/cameraupload/init.do" id="accessLink" type="button"">Access Link</a>
+				<a href="index.html" data-role="button" style="display: none;">Maybe</a>
+			</div>
+		
+			<div id="sendSmsDiv" style="margin-top: 30px;">
+
+				<input type="tel" id="phone" name="phone" placeholder="SMS Number" />
+				<textarea id="message" name="message" style="display: none;">
+					http://192.168.0.102:8080/cameraupload/init.do
+				</textarea>
+
+				<div data-role="controlgroup">
+					<a href="index.html" data-role="button" style="display: none;">Yes</a>
+					<a href="#" id="send" data-role="button" data-corners="false">Send
+						</a>
+					<a href="index.html" data-role="button" style="display: none;">Maybe</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div data-role="footer" data-position="fixed">
+		<div data-role="navbar">
+			<ul>
+				<li style="width: 100%;"><a href="#" onclick="uploadPhoto();" id="submitButton" type="button">Upload Photos</a></li>
+			</ul>
+			
+		</div>
+
+
+
+	</div>
+	
+</div>
+
+</html>

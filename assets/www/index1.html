@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<link rel="stylesheet" href="jquery.mobile/jquery.mobile-1.1.0.min.css" />
+<script src="jquery.mobile/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="jquery.mobile/jquery.mobile-1.1.0.min.js"></script>
+<script type="text/javascript" src="cordova-1.6.1.js"></script>
+<style type="text/css" media="screen">
+</style>
+<script type="text/javascript">
+document.addEventListener("deviceready", onDeviceReady, false);
+
+// PhoneGap is ready
+//
+function onDeviceReady() {
+
+    // Retrieve image file location from specified source
+    navigator.camera.getPicture(uploadPhoto,
+                                function(message) { alert('get picture failed'); },
+                                { quality: 50, 
+                                destinationType: navigator.camera.DestinationType.FILE_URI,
+                                sourceType: navigator.camera.PictureSourceType.PHOTOLIBRARY }
+                                );
+
+}
+
+function uploadPhoto(imageURI) {
+    var options = new FileUploadOptions();
+    options.fileKey="file";
+    options.fileName=imageURI.substr(imageURI.lastIndexOf('/')+1);
+    options.mimeType="image/jpeg";
+
+    var params = new Object();
+    params.value1 = "test";
+    params.value2 = "param";
+
+    options.params = params;
+
+    var ft = new FileTransfer();
+    ft.upload(imageURI, "http://some.server.com/upload.php", win, fail, options);
+}
+
+function win(r) {
+    console.log("Code = " + r.responseCode);
+    console.log("Response = " + r.response);
+    console.log("Sent = " + r.bytesSent);
+}
+
+function fail(error) {
+    alert("An error has occurred: Code = " = error.code);
+}
+</script>
+<title>Mpupa Camera</title>
+</head>
+<div data-role="page" id="homePage" data-theme="c">
+	<div data-role="header" data-theme="c" style="">Mpupa Camera</div>
+	<div data-role="content" data-theme="c">
+		 <h1>Example</h1>
+    <p>Upload File</p>
+	</div>
+	<div data-role="footer" class="mw_footer" data-theme="c">
+
+	</div>
+</div>
+</html>

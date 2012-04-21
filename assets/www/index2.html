@@ -1,0 +1,185 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<link rel="stylesheet" href="jquery.mobile/jquery.mobile-1.1.0.min.css" />
+<script src="jquery.mobile/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="jquery.mobile/jquery.mobile-1.1.0.min.js"></script>
+<script type="text/javascript" src="cordova-1.6.1.js"></script>
+<style type="text/css" media="screen">
+</style>
+<script type="text/javascript">
+	var pictureSource; // picture source
+	var destinationType; // sets the format of returned value 
+
+	// Wait for Cordova to connect with the device
+	//
+	document.addEventListener("deviceready", onDeviceReady, false);
+
+	/* $(document).bind("pageinit",function(){
+		onDeviceReady();
+	}); */
+	
+	// Cordova is ready to be used!
+	//
+	function onDeviceReady() {
+		pictureSource = navigator.camera.PictureSourceType;
+		destinationType = navigator.camera.DestinationType;
+	}
+
+	// Called when a photo is successfully retrieved
+	//
+	function onPhotoDataSuccess(imageData) {
+		// Uncomment to view the base64 encoded image data
+		// console.log(imageData);
+		// Get image handle
+		//
+		var smallImage = document.getElementById('smallImage');
+
+		// Unhide image elements
+		//
+		smallImage.style.display = 'block';
+
+		// Show the captured photo
+		// The inline CSS rules are used to resize the image
+		//
+		smallImage.src = "data:image/jpeg;base64," + imageData;
+		alert(smallImage.src);
+		uploadPhoto(imageData);
+		$("#filePath").val(smallImage.src);
+		$("#uploadDiv").show();
+		alert($("#filePath").val());
+	}
+
+	// Called when a photo is successfully retrieved
+	//
+	function onPhotoURISuccess(imageURI) {
+
+		// Get image handle
+		//
+		var largeImage = document.getElementById('smallImage');
+
+		// Unhide image elements
+		//
+		largeImage.style.display = 'block';
+
+		// Show the captured photo
+		// The inline CSS rules are used to resize the image
+		//
+		largeImage.src = imageURI;
+		uploadPhoto(imageURI);
+		$("#filePath").val(smallImage.src);
+		$("#uploadDiv").show();
+	}
+
+	// A button will call this function
+	//
+	function capturePhoto() {
+		// Take picture using device camera and retrieve image as base64-encoded string
+		navigator.camera.getPicture(onPhotoURISuccess, onFail, {
+			quality : 50,
+			destinationType : destinationType.FILE_URL,
+			sourceType : pictureSource.CAMERA
+		});
+	}
+
+	// A button will call this function
+	//
+	function capturePhotoEdit() {
+		// Take picture using device camera, allow edit, and retrieve image as base64-encoded string  
+		navigator.camera.getPicture(onPhotoDataSuccess, onFail, {
+			quality : 20,
+			allowEdit : true,
+			destinationType : destinationType.DATA_URL
+		});
+	}
+
+	// A button will call this function
+	//
+	function getPhoto(source) {
+		// Retrieve image file location from specified source
+		navigator.camera.getPicture(onPhotoURISuccess, onFail, {
+			quality : 50,
+			destinationType : destinationType.FILE_URI,
+			sourceType : source
+		});
+	}
+
+	// Called if something bad happens.
+	// 
+	function onFail(message) {
+		alert('Failed because: ' + message);
+	}
+
+	function showSmallImg(src) {
+		$("#smallImg").attr("src",src).show();
+		$("#filePath").val(src);
+		$("#uploadDiv").show();
+	}
+	
+	function uploadForm() {
+		//$("#uploadForm").submit();
+		uploadPhoto();
+	}
+	
+	/*     upload file            */
+	
+		function uploadPhoto(imageURI) {
+		
+			alert("imageUrl:"+imageURI);
+            var options = new FileUploadOptions();
+            options.fileKey="file";
+            options.fileName=imageURI.substr(imageURI.lastIndexOf('/')+1);
+            alert("fileName:"+options.fileName);
+            options.mimeType="image/jpeg";
+
+            var params = new Object();
+            params.name = "test";
+            params.value2 = "param";
+
+            options.params = params;
+
+            var ft = new FileTransfer();
+            ft.upload(imageURI, "http://192.168.0.102:8080/cameraupload/upload.do", win, fail, options);
+        }
+
+        function win(r) {
+            console.log("Code = " + r.responseCode);
+            console.log("Response = " + r.response);
+            console.log("Sent = " + r.bytesSent);
+        }
+
+        function fail(error) {
+            alert("An error has occurred: Code = " + error.code);
+            console.log("upload error source " + error.source);
+            console.log("upload error target " + error.target);
+        }
+</script>
+<title>Mpupa Camera</title>
+</head>
+<div data-role="page" id="homePage" data-theme="c">
+	<div data-role="header" data-theme="c" style="">Mpupa Camera</div>
+	<div data-role="content" data-theme="c">
+		<button onclick="capturePhoto();">Capture Photo</button>
+		<button onclick="getPhoto(pictureSource.SAVEDPHOTOALBUM);">From
+			Photo Album</button>
+		<br> <img style="display: none; width: 100px;height: 100px;" id="smallImage" src="" /> 
+			<img style="display: none;" id="largeImage" src="" />
+		<div id="uploadDiv" style="display: none;">
+
+			<form id="uploadForm" method="post"
+				action="http://192.168.0.102:8080/cameraupload/upload.do"
+				enctype="multipart/form-data">
+				<input type="text" name="name" /> <input type="file" name="file"
+					id="filePath" /> 
+			</form>
+			
+			<a href="#" onclick="uploadForm();">Submit Photos</a>
+		</div>
+	</div>
+	<div data-role="footer" class="mw_footer" data-theme="c">
+
+	</div>
+</div>
+</html>
