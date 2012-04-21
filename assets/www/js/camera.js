@@ -70,6 +70,11 @@ function onDeviceReady() {
 	function uploadPhoto() {
 		$.mobile.showPageLoadingMsg();
 		
+		
+		var folderName = (new Date()).getTime();
+		$("#accessLink").attr("href",serverPath+"/"+folderName);
+		$("#message").text(serverPath+"/"+folderName);
+		var length = $("#galleryDiv img").length;
 		$("#galleryDiv img").each(function(index,item){
 			var imageURI = $(item).attr("src");
 			var options = new FileUploadOptions();
@@ -78,13 +83,20 @@ function onDeviceReady() {
 			options.mimeType = "image/jpeg";
 			
 			var params = new Object();
-			params.name = "test";
-			params.value2 = "param";
+			params.folderName = folderName;
+			//params.value2 = "param";
 			options.params = params;
 			
 			var ft = new FileTransfer();
-			ft.upload(imageURI, "http://192.168.0.102:8080/cameraupload/upload.do",
-					win, fail, options);
+			
+			if(index < length -1) {
+				ft.upload(imageURI, "http://192.168.0.102:8080/cameraupload/upload.do",
+						"", fail, options);
+			} else {
+				
+				ft.upload(imageURI, "http://192.168.0.102:8080/cameraupload/upload.do",
+						win, fail, options);
+			}
 		});
 		
 		//$("#accessLink").show();
