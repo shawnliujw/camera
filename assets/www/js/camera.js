@@ -90,11 +90,11 @@ function onDeviceReady() {
 			var ft = new FileTransfer();
 			
 			if(index < length -1) {
-				ft.upload(imageURI, "http://192.168.0.102:8080/cameraupload/upload.do",
+				ft.upload(imageURI, serverPath + "/upload.do",
 						"", fail, options);
 			} else {
 				
-				ft.upload(imageURI, "http://192.168.0.102:8080/cameraupload/upload.do",
+				ft.upload(imageURI,serverPath + "/upload.do",
 						win, fail, options);
 			}
 		});
